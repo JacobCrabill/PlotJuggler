@@ -4,7 +4,7 @@
 #include <QtPlugin>
 #include <QWidget>
 #include "PlotJuggler/dataloader_base.h"
-#include "mavlink_parser.h"
+#include "PlotJuggler/Parsers/mavlink_parser.h"
 
 using namespace PJ;
 

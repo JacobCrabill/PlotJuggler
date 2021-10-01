@@ -81,10 +81,6 @@ SET( PLOtJUGGLER_SRC
 
     mainwindow.h
     realslider.h
-
-    # Parsers
-    nlohmann_parsers.cpp
-    mavlink_parser.cpp
     )
 
 

@@ -47,9 +47,9 @@
 #include "ui_aboutdialog.h"
 #include "ui_support_dialog.h"
 #include "preferences_dialog.h"
-#include "nlohmann_parsers.h"
-#include "mavlink_parser.h"
 #include "cheatsheet/cheatsheet_dialog.h"
+#include "PlotJuggler/Parsers/nlohmann_parsers.h"
+#include "PlotJuggler/Parsers/mavlink_parser.h"
 
 #ifdef COMPILED_WITH_CATKIN
 
