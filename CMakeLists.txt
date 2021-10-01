@@ -233,6 +233,7 @@ add_subdirectory( plotjuggler_app )
 
 add_subdirectory( plotjuggler_plugins/DataLoadCSV )
 add_subdirectory( plotjuggler_plugins/DataLoadULog )
+add_subdirectory( plotjuggler_plugins/DataLoadTLog )
 add_subdirectory( plotjuggler_plugins/DataStreamSample )
 add_subdirectory( plotjuggler_plugins/DataStreamWebsocket )
 add_subdirectory( plotjuggler_plugins/DataStreamUDP )
