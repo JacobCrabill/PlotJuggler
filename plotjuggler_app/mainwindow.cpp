@@ -352,11 +352,11 @@ MainWindow::MainWindow(const QCommandLineParser& commandline_parser, QWidget* pa
   loadStyleSheet(tr(":/resources/stylesheet_%1.qss").arg(theme));
 
   // builtin messageParsers
-  _message_parser_factory->insert({ "JSON", std::make_shared<JSON_ParserCreator>() });
-  _message_parser_factory->insert({ "CBOR", std::make_shared<CBOR_ParserCreator>() });
-  _message_parser_factory->insert({ "BSON", std::make_shared<BSON_ParserCreator>() });
-  _message_parser_factory->insert(
-      { "MessagePack", std::make_shared<MessagePack_ParserCreator>() });
+  _message_parser_factory->insert( {"JSON", std::make_shared<JSON_ParserCreator>() });
+  _message_parser_factory->insert( {"CBOR", std::make_shared<CBOR_ParserCreator>() });
+  _message_parser_factory->insert( {"BSON", std::make_shared<BSON_ParserCreator>() });
+  _message_parser_factory->insert( {"MessagePack", std::make_shared<MessagePack_ParserCreator>() });
+  _message_parser_factory->insert( {"MAVLink", std::make_shared<MAVLink_ParserCreator>() });
 
   if (!_default_streamer.isEmpty())
   {
