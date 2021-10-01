@@ -25,6 +25,8 @@ endif()
 
 include_directories( plotjuggler_base/include )
 include_directories( plotjuggler_base/src )
+include_directories( plotjuggler_parsers/ )
+include_directories( external/mavlink/ )
 
 add_definitions( -DFMT_HEADER_ONLY )
 
@@ -136,6 +138,7 @@ include_directories(
     ${Qt5OpenGL_INCLUDE_DIRS}
     ./3rdparty/
     ./3rdparty/color_widgets/include
+    ./3rdparty/mavlink
     ./3rdparty/Qt-Advanced-Docking/include
     ./3rdparty/qwt/src
     ./3rdparty/sol
@@ -156,6 +159,8 @@ add_library( plotjuggler_base
     ${PLOTJUGGLER_BASE_MOCS}
      plotjuggler_base/src/plotdata.cpp
      plotjuggler_base/src/datastreamer_base.cpp
+     plotjuggler_base/src/mavlink_parser.cpp
+     plotjuggler_base/src/nlohmann_parsers.cpp
      plotjuggler_base/src/transform_function.cpp
      plotjuggler_base/src/plotwidget_base.cpp
      plotjuggler_base/src/plotzoomer.cpp

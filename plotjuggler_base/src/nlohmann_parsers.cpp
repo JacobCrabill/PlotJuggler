@@ -1,4 +1,4 @@
-#include "nlohmann_parsers.h"
+#include "PlotJuggler/Parsers/nlohmann_parsers.h"
 
 #include "PlotJuggler/fmt/format.h"
 

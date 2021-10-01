@@ -20,7 +20,7 @@
 #include "transforms/outlier_removal.h"
 #include "transforms/integral_transform.h"
 
-#include "nlohmann_parsers.h"
+#include "PlotJuggler/Parsers/nlohmann_parsers.h"
 #include "new_release_dialog.h"
 
 static QString VERSION_STRING = QString("%1.%2.%3").arg(PJ_MAJOR_VERSION).arg(PJ_MINOR_VERSION).arg(PJ_PATCH_VERSION);
