@@ -1,4 +1,4 @@
-#include "nlohmann_parsers.h"
+#include "mavlink_parser.h"
 
 #include "PlotJuggler/fmt/format.h"
 
@@ -52,7 +52,6 @@ bool MAVLink_Parser::parseMessage(const MessageRef msg,
    */
 
   std::string prefix = "tlog.global_position_int.lat";
-  double timestamp = 0;
   double numeric_value = 0;
   auto plot_data = &(getSeries(prefix));
   plot_data->pushBack( {timestamp, numeric_value} );

@@ -10,7 +10,7 @@ class MAVLink_Parser: public MessageParser
 {
 public:
 
-  MAVLink_Parser(const std::string& topic_name, PlotDataMapRef& data, bool use_msg_stamp):
+  MAVLink_Parser(const std::string& topic_name, PlotDataMapRef& data):
     MessageParser(topic_name, data) {}
 
 protected:
