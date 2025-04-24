@@ -32,7 +32,7 @@ QT5_WRAP_UI ( UI_SRC
     cheatsheet/cheatsheet_dialog.ui
     )
 
-SET( PLOtJUGGLER_SRC
+SET(PLOTJUGGLER_SRC
 
     cheatsheet/cheatsheet_dialog.cpp
 
@@ -85,7 +85,7 @@ SET( PLOtJUGGLER_SRC
 
 
 add_executable(plotjuggler
-    ${PLOtJUGGLER_SRC}
+    ${PLOTJUGGLER_SRC}
     ${RES_SRC}
     ${UI_SRC}
     ${BACKWARD_ENABLE} )
@@ -115,7 +115,7 @@ if(COMPILING_WITH_CATKIN)
 
 elseif(COMPILING_WITH_AMENT)
 
-    target_link_libraries(plotjuggler ${ament_index_cpp_LIBRARIES} )
+    target_link_libraries(plotjuggler ament_index_cpp::ament_index_cpp)
 
     install(TARGETS plotjuggler
         DESTINATION lib/${PROJECT_NAME} )
