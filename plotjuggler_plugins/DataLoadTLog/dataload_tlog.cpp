@@ -10,17 +10,13 @@
 #include "PlotJuggler/datastreamer_base.h"
 #include "selectlistdialog.h"
 
-uint64_t readUint64BigEndian(uint8_t* data) {
-    uint64_t out = ((uint64_t)data[0] << 56) +
-                   ((uint64_t)data[1] << 48) +
-                   ((uint64_t)data[2] << 40) +
-                   ((uint64_t)data[3] << 32) +
-                   ((uint64_t)data[4] << 24) +
-                   ((uint64_t)data[5] << 16) +
-                   ((uint64_t)data[6] << 8) +
-                    data[7];
-    
-    return out;
+uint64_t readUint64BigEndian(uint8_t* data)
+{
+  uint64_t out = ((uint64_t)data[0] << 56) + ((uint64_t)data[1] << 48) + ((uint64_t)data[2] << 40) +
+                 ((uint64_t)data[3] << 32) + ((uint64_t)data[4] << 24) + ((uint64_t)data[5] << 16) +
+                 ((uint64_t)data[6] << 8) + data[7];
+
+  return out;
 }
 
 DataLoadTLog::DataLoadTLog() : _main_win(nullptr)
@@ -68,19 +64,18 @@ bool DataLoadTLog::readDataFromFile(FileLoadInfo* fileload_info, PlotDataMapRef&
   // Read the file into memory
   QByteArray file_array = file.readAll();
   uint8_t* data = reinterpret_cast<uint8_t*>(file_array.data());
-  size_t nbytes = file_array.size();
+  const size_t nbytes = file_array.size();
 
   // Useful constants
-  uint8_t TIME_LEN = 8;
-  uint8_t CRC_LEN = 2;
-  uint8_t HEADER_LEN_V1 = 6;
-  uint8_t HEADER_LEN_V2 = 10;
-  uint8_t OVERHEAD_V1 = HEADER_LEN_V1 + CRC_LEN;
-  uint8_t OVERHEAD_V2 = HEADER_LEN_V2 + CRC_LEN;
+  const uint8_t TIME_LEN = 8;
+  const uint8_t CRC_LEN = 2;
+  const uint8_t HEADER_LEN_V1 = 6;
+  const uint8_t HEADER_LEN_V2 = 10;
+  const uint8_t OVERHEAD_V1 = HEADER_LEN_V1 + CRC_LEN;
+  const uint8_t OVERHEAD_V2 = HEADER_LEN_V2 + CRC_LEN;
 
-  uint8_t MAVLINK_MAGIC_V1 = 0xfe;
-  uint8_t MAVLINK_MAGIC_V2 = 0xfd;
-  
+  const uint8_t MAVLINK_MAGIC_V1 = 0xfe;
+  const uint8_t MAVLINK_MAGIC_V2 = 0xfd;
 
   // ... loop through file; do:
   // [8 bytes: timestamp][mavlink message]
@@ -88,45 +83,63 @@ bool DataLoadTLog::readDataFromFile(FileLoadInfo* fileload_info, PlotDataMapRef&
   // _parser->parseMessage(msg, timestamp);
 
   size_t ofs = 0;
+  double first_timestamp = -1;
   while (ofs + HEADER_LEN_V1 + TIME_LEN < nbytes)
   {
-    // Step 1: Read the timestamp
+    // Step 1: Read the timestamp; convert microseconds to seconds
     double timestamp = 1e-6 * readUint64BigEndian(&data[ofs]);
-    /// TODO: Sanity-check the timestamp value?
 
-    size_t mofs = ofs + TIME_LEN;
+    const size_t mofs = ofs + TIME_LEN;
 
     // Step 2: Begin parsing the bytes assumed to be a MAVLink packet
     uint8_t stx = data[mofs];
-    uint8_t len = data[mofs+1];
+    uint8_t len = data[mofs + 1];
     uint16_t mlen = len;
     if (stx == MAVLINK_MAGIC_V1)
     {
-        mlen = OVERHEAD_V1 + len;
+      mlen = OVERHEAD_V1 + len;
     }
     else if (stx == MAVLINK_MAGIC_V2)
     {
-        mlen = OVERHEAD_V2 + len;
+      mlen = OVERHEAD_V2 + len;
     }
     else
     {
-        // This is not the byte you're looking for (bad packet?) - move along
-        ofs++;
-        continue;
+      // This is not the byte you're looking for (bad packet?) - move along
+      ofs++;
+      continue;
     }
 
     if (mofs + mlen > nbytes)
     {
-        // malformed / partial packet at end of log - quit
-        break;
+      // malformed / partial packet at end of log - quit
+      break;
+    }
+
+    // Loosely sanity-check the timestamp value (seconds since Unix epoch)
+    if (first_timestamp < 0)
+    {
+      first_timestamp = timestamp;
+    }
+    else if ((timestamp - first_timestamp) > 1e6)
+    {
+      // Timestamps should never be this large - Bad packet; try to resync
+      ofs++;
+      continue;
     }
 
     // Try to parse the message
-    MessageRef msg (&data[mofs], mlen);
+    MessageRef msg(&data[mofs], mlen);
     if (_parser->parseMessage(msg, timestamp))
     {
-        // successfully parsed a message
-        ofs += TIME_LEN + mlen;
+      // successfully parsed a message
+      ofs += TIME_LEN + mlen;
+    }
+    else
+    {
+      // Bad message - try to resync
+      ofs++;
+      continue;
     }
   }
 
